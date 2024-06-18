@@ -1,6 +1,8 @@
 package com.amazigh.booknetwork.config;
 
 import lombok.RequiredArgsConstructor;
+
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.domain.AuditorAware;
@@ -26,6 +28,9 @@ public class BeansConfig {
 
   private final UserDetailsService userDetailsService;
 
+  @Value("${application.cors.origins}")
+  private List<String> allowedOrigin;
+
   @Bean
   public AuthenticationProvider authenticationProvider() {
     DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
@@ -47,7 +52,7 @@ public class BeansConfig {
   @Bean
   public CorsConfigurationSource corsConfigurationSource() {
     CorsConfiguration configuration = new CorsConfiguration();
-    configuration.setAllowedOrigins(List.of("http://localhost:4200", "http://localhost:8088"));
+    configuration.setAllowedOrigins(allowedOrigin);
     configuration.setAllowedHeaders(Arrays.asList(AUTHORIZATION, ACCEPT, CONTENT_TYPE, ORIGIN));
     configuration.setAllowedMethods(Arrays.asList("GET","POST","PUT","DELETE","PATCH"));
     UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
